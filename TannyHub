@@ -1,0 +1,79 @@
+local DiscordLib = loadstring(game:HttpGet"https://raw.githubusercontent.com/dawid-scripts/UI-Libs/main/discord%20lib.txt")()
+local win = DiscordLib:Window("TannyHub")
+local serv = win:Server("Main", "http://www.roblox.com/asset/?id=6031075938")
+local btns = serv:Channel("Misc")
+_G.aye = false
+_G.aye = true
+
+DiscordLib:Notification("Notification", "Welcome To TannyHub", "Okay!")
+btns:Button("Rejoin", function()
+    game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
+end)
+
+--walk
+local sldrs = serv:Channel("WalkSpeed")
+local sldr = sldrs:Slider("Slide ", 0, 1000, 0, function(SpeedHack)
+    _G.SpeedHack = SpeedHack
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = _G.SpeedHack
+    end)
+
+btns:Button("Ctrl-tp", function()
+    local Player = game.Players.LocalPlayer
+    local Mouse = Player:GetMouse()
+    local UserInputService = game:GetService('UserInputService')
+    local HoldingControl = false
+        Mouse.Button1Down:connect(function()
+            if HoldingControl then
+            Player.Character:MoveTo(Mouse.Hit.p)
+            end
+            end)
+            
+            UserInputService.InputBegan:connect(function(Input, Processed)
+            if Input.UserInputType == Enum.UserInputType.Keyboard then
+            if Input.KeyCode == Enum.KeyCode.LeftControl then
+            HoldingControl = true
+            elseif Input.KeyCode == Enum.KeyCode.RightControl then
+            HoldingControl = true
+            end
+            end
+            end)
+            
+            UserInputService.InputEnded:connect(function(Input, Processed)
+            if Input.UserInputType == Enum.UserInputType.Keyboard then
+            if Input.KeyCode == Enum.KeyCode.LeftControl then
+            HoldingControl = false
+            elseif Input.KeyCode == Enum.KeyCode.RightControl then
+            HoldingControl = false
+            end
+            end
+            end)
+   
+end)
+
+--DropdownsTp
+local drops = serv:Channel("Tp")
+
+local drop = drops:Dropdown("Tp!",{"Option 1","Option 2","Option 3","Option 4","Option 5"}, function(bool)
+    _G.Player = bool
+end)
+drops:Button("Tp", function(bool)
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Players")[_G.Player].Character.HumanoidRootPart.CFrame
+   wait()
+end)
+
+drops:Button("update", function()
+local Players = game:GetService("Players"):GetChildren()
+local array = {}
+drop:Clear()
+for i,v in pairs(Players) do
+    drop:Add(v.name)
+    table.insert(array,v.name)
+end
+sel:updateDrop(Players,"7",array)
+end)
+
+drops:Button("Clear", function()
+    drop:Clear()
+    end)
+    
+
